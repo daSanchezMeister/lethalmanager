@@ -1,0 +1,55 @@
+:root {
+  font-family: Consolas, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  /* color-scheme: light dark; */
+  background-color: #060606;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --main-color: #00ff00ad;
+}
+
+body {
+  color: var(--main-color);
+}
+
+main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.bg {
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
+  top: 0; left: 0; right: 0; bottom: 0;
+}
+
+.panel {
+  position: absolute;
+  top: 200px;
+  right: 50px; left: 50px; bottom: 50px;
+}
+
+.title {
+  position: fixed;
+  top: 20px; right: 50px;
+  opacity: .9;
+}
+.title pre {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.title.glitch {
+  z-index: -1;
+}
