@@ -8,7 +8,6 @@
   import Prompt   from './lib/Prompt.svelte'
 
   let view = 'menu';
-  
   let gameStart = true;
   
   const handleShowView = (event) => {
