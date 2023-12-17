@@ -207,15 +207,20 @@
 
 @keyframes bg_alert {
   0% { background: #ff000030; }
-  16% { background: #ff000060; }
-  33% { background: #ff000030; }
-  49% { background: #ff000060; }
-  66% { background: #ff000030; }
-  84% { background: #ff000060; }
-  100% { background: #00ff0014; }
+  50% { background: #ff000050; }
+  100% { background: #ff000030; }
 }
 
-.anim_alert { animation: bg_alert 4s; }
+@keyframes UIerror {
+  0% { background: #ff000030; }
+  45% { background: #ff000017; }
+  60% { background: #00ff0010; }
+  100% { background: #ff000030; }
+}
+
+.UIerror { animation: UIerror .17s ;}
+
+.anim_alert { animation: bg_alert 2s infinite; }
 
 .anim_bounce { animation: bounce .2s; }
 

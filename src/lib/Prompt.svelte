@@ -18,11 +18,7 @@
         };
     });
 
-    function handleDocumentClick(event) {
-        //if (!inputElement.contains(event.target)) {
-            inputElement.focus();
-        //}
-    }
+    function handleDocumentClick() { inputElement.focus(); }
 
     let commandInputValue = '';
     let matchingCommands = [];
@@ -93,15 +89,17 @@
                 previousCommandsLastIndex = previousCommands.length - 1;
             }
 
+            /*********************
+             * BUY COMMAND HANDLE
+             *********************/
             if (commandInputValue.startsWith('buy')) {
-
                 commandInputValue = commandInputValue.trim();
 
                 // regular expression for BUY prompt
                 const regex = /^buy\s(\w+)(?:\s(\d+))?$/i;
                 let query = commandInputValue.match(regex);
 
-                //console.log(query);
+                console.log(query);
                 if (query) {
                     let requestedeItem = query[1];
                     let quantity = parseInt(query[2]) || 1;
@@ -113,9 +111,7 @@
                     // if item is available
                     if (availableItem) {
                         if (availableItem.price * quantity > $game.money) {
-                            console.log('not enough money');
-                            // play error sound
-                            // ................
+                            dispatch('promptError', { message: 'Not enough money' });
                         } else {
                             // look for existing item in storage
                             const itemInStorage = $storage.find(item => item.name.toLowerCase() === availableItem.name.toLowerCase());
@@ -129,9 +125,11 @@
                                         return item;
                                     });
                                 });
+                                dispatch('promptSuccess', { message: "Item quantity successfully updated" });
                             } else {
                                 // add new item to storage
                                 $storage = [...$storage, { name: availableItem.name, price: availableItem.price, quantity: quantity }]
+                                dispatch('promptSuccess', { message: "New item successfully added to storage" });
                             }
                             // remove money from game
                             game.update(game => {
@@ -139,18 +137,12 @@
                             });
                         }
                         console.log($game.money);
+                    } else {
+                        dispatch('promptError', { message: 'Invalid prompt command' });
+                     
                     }
                 }
-                console.log(storage);
             }
-
-
-
-
-
-            /*********************
-             * CLEAN INPUT VALUE
-             *********************/
             commandInputValue = '';
         }
         /**************************

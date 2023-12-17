@@ -4,7 +4,7 @@
 </script>
 
 <div transition:fade={{duration: 2000}}>
-    <span id="money">{$game.money}</span>
+    <span class:anim_alert={$game.money<30} id="money">{$game.money}</span>
     <span id="time">
         <span id="hour">{$game.hour}</span>:<span id="minute">{$game.minute}</span>
     </span>
@@ -38,7 +38,7 @@
         left: 14px;
         width: 8px;
         height: 16px;
-        background: #00ff00ad;
+        background: var(--main-color);
         border-radius: 4px;
     }
 </style>
