@@ -71,13 +71,16 @@
                 </ul>
             </h1>
             {#if $storage.length === 0}
-            ... empty storage, purchase item from the store.
+                ... empty storage, purchase item from the store.
+            {:else}
+                <ul id="storage">
+                    {#each $storage as item}
+                        {#if item.quantity !== 0}
+                            <li>{item.quantity} {item.name}</li>
+                        {/if}
+                    {/each}
+                </ul>
             {/if}
-            <ul id="storage">
-                {#each $storage as item}
-                    <li>{item.quantity} {item.name}</li>
-                {/each}
-            </ul>
         </section>
 
     </div>

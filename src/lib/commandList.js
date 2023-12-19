@@ -3,6 +3,6 @@ export const commandList = [
     'menu',
     'monitor',
 
-    'buy flashlight',
-    'buy talkie',
+    'buy flashlight', 'equip flashlight',
+    'buy talkie', 'equip talkie',
 ];

@@ -1,12 +1,17 @@
 <script>
     import { fade } from 'svelte/transition';
     import { game } from './game.js';
+    
 </script>
 
 <div transition:fade={{duration: 2000}}>
     <span class:anim_alert={$game.money<30} id="money">{$game.money}</span>
     <span id="time">
-        <span id="hour">{$game.hour}</span>:<span id="minute">{$game.minute}</span>
+        <span id="hour">{
+            $game.hour < 10 ? '0'+$game.hour : $game.hour
+        }</span>:<span id="minute">{
+            $game.minute < 10 ? '0'+$game.minute : $game.minute
+        }</span>
     </span>
     <span id="danger_emo">&#x2620;</span>
 </div>

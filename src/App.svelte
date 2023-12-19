@@ -1,19 +1,28 @@
 <script>
   import { changeViewSound, errorSound, successSound, playRandomAtmosAudio } from './lib/audio.js';
+  //import { game } from './lib/game.js';
 
   import Intro    from './lib/Intro.svelte';
   import Header   from './lib/Header.svelte';
   import MainMenu from './lib/MainMenu.svelte';
+  import Monitor  from './lib/Monitor.svelte';
+  import Logs     from './lib/Logs.svelte';
   import Store    from './lib/Store.svelte';
   import Prompt   from './lib/Prompt.svelte'
 
   let errorLayer;
-  let view = 'menu';
-  let gameStart = true;
+  let view = 'store';
+  let gameUI = true;
+  let log = false;
   
   const handleShowView = (event) => {
     view = event.detail.view;
     changeViewSound.play();
+  }
+
+  const toggleLogWindow = (event) => {
+    log = event.detail.status;
+    successSound.play();
   }
 
   const UIhandleError = (event) => {
@@ -31,29 +40,38 @@
     successSound.play();
   }
   
-  const startGame = () => {
-    gameStart = true;
+  const startUI = () => {
+    gameUI = true;
     playRandomAtmosAudio();
   }
-  
+
 </script>
 
 <main>
     <h1>Lethal Manager</h1>
     
-    {#if view === 'intro'}<Intro on:introIsOver={startGame}/>{/if}
+    {#if view === 'intro'}<Intro on:introIsOver={startUI}/>{/if}
     
-    {#if gameStart}<Header on:introFinished={startGame}/>{/if}
+    {#if gameUI}<Header 
+      on:introFinished={startUI}/>
+    {/if}
     
     {#if view === 'menu'}<MainMenu />{/if}
+    {#if view === 'monitor'}<Monitor />{/if}
+    
     {#if view === 'store'}<Store />{/if}
     
-    {#if gameStart}<Prompt 
+    {#if gameUI}<Prompt 
       on:promptError={UIhandleError}
       on:promptSuccess={UIhandleSuccess}
+      on:log={toggleLogWindow}
       on:changeView={handleShowView}/>
     {/if}
     
+    {#if log}
+      <Logs />
+    {/if}
+
     <div class="bg bg_2"></div>
     <div class="bg bg_1"></div>
     <div class="bg bg_front"></div>
