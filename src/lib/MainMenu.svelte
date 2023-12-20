@@ -48,7 +48,7 @@
 
         <li>
         > PAUSE
-        <span>Wanna take a break form that messy mess ?</span>
+        <span>Wanna take a break form that messy mess ? Look by the window.</span>
         </li>
 
         <li>

@@ -1,58 +1,68 @@
 import { writable } from 'svelte/store';
+import { getRandomInt, namesList, traitsList } from './helpers.js';
 
+
+let crewGenerator = () => {
+  let randomCaracter = {}
+  let traitsNumber = getRandomInt(0, 2);
+  
+  if (traitsNumber === 0) {
+    randomCaracter = { 
+      id: getRandomInt(1, 1000),
+      isAlive: true,
+      name: namesList[getRandomInt(0, namesList.length - 1)],
+      health: 100,
+      productivity: getRandomInt(1, 10),
+      status: "Cryosleep",
+      distanceFromShip: 0,
+      inventory: [],
+      traits : [],
+    }
+  } else if (traitsNumber === 1) {
+    randomCaracter = { 
+      id: getRandomInt(1, 1000),
+      isAlive: true,
+      name: namesList[getRandomInt(0, namesList.length - 1)],
+      health: 100,
+      productivity: getRandomInt(1, 10),
+      status: "Cryosleep",
+      distanceFromShip: 0,
+      inventory: [],
+      traits : [
+        traitsList[getRandomInt(0, traitsList.length - 1)],
+      ],
+    }
+  } else {
+    randomCaracter = { 
+      id: getRandomInt(1, 1000),
+      isAlive: true,
+      name: namesList[getRandomInt(0, namesList.length - 1)],
+      health: 100,
+      productivity: getRandomInt(1, 10),
+      status: "Cryosleep",
+      distanceFromShip: 0,
+      inventory: [],
+      traits : [
+        traitsList[getRandomInt(0, traitsList.length - 1)],
+        traitsList[getRandomInt(0, traitsList.length - 1)],
+      ],
+    }
+  }
+  console.log(randomCaracter);
+  return randomCaracter;
+}
+
+
+// main game object
 export let game = writable({
     running: false,
     money: 60,
     hour: 9,
     minute: 0,
     crew: [
-      { 
-        id: 1,
-        name: 'John', 
-        isAlive: true,
-        health: 100,
-        status: "Cryosleep",
-        distanceFromShip: 0,
-        moovement: 9, // - inventory.length [-4 max ]
-        inventory: [],
-        lootBag: [],
-        traits : [],
-      },
-      { 
-        id: 1,
-        name: 'Jane', 
-        isAlive: true,
-        health: 100,
-        status: "Cryosleep",
-        distanceFromShip: 0,
-        moovement: 7, // - inventory.length [-4 max ]
-        inventory: [{ name: "Flashlight", price: 15, quantity: 1 }],
-        lootBag: [],
-        traits : [], 
-      },
-      { 
-        id: 1,
-        name: 'Jack', 
-        isAlive: true,
-        health: 100,
-        status: "Cryosleep",
-        distanceFromShip: 0,
-        moovement: 5, // - inventory.length [-4 max ]
-        inventory: [{ name: "Flashlight", price: 15, quantity: 1 }],
-        lootBag: [],
-        traits : [], 
-      },
-      { 
-        id: 1,
-        name: 'Jill', 
-        isAlive: true,
-        health: 100,
-        status: "Cryosleep",
-        distanceFromShip: 0,
-        moovement: 6, // - inventory.length [-4 max ]
-        inventory: [],
-        lootBag: [],
-        traits : [], 
-      },
+      crewGenerator(),
+      crewGenerator(),
+      crewGenerator(),
+      crewGenerator(),
     ]
 });

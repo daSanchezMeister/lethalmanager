@@ -70,6 +70,9 @@
                 case 'store':
                     dispatch('changeView', { view: 'store' });
                 break;
+                case 'pause':
+                    dispatch('changeView', { view: 'pause' });
+                break;
                 case 'manual':
                     dispatch('changeView', { view: 'manual' });
                 break;
@@ -165,7 +168,7 @@
                         // test if requested item is in storage
                         const itemInStorage = $storage.find(item => item.name.toLowerCase() === requestedeItem.toLowerCase());
                         if (itemInStorage) {
-                            // test if requested item is a valid item for the requested crew member
+                            // test if crew member already have this item
                             const sameItemInInventory = validCrewMember.inventory.find(item => item.name.toLowerCase() === requestedeItem.toLowerCase());
                             if (sameItemInInventory) {
                                 dispatch('promptError', { message: 'This item is already equiped, can\'t have two of the same' });
@@ -192,7 +195,7 @@
                                         return item;
                                     });
                                 });
-                                console.log(storage);
+                                dispatch('promptSuccess', { message: "Item successfully added to crew member" });
                             }
                         } else {
                             dispatch('promptError', { message: 'Item not found in storage' });
@@ -252,14 +255,13 @@
         list-style: disclosure-open;
         padding-left: 19px;
         position: relative;
-        top: 25px; left: 0;
+        top: 10px; left: 0;
     }
-    li span { background-color: #060606; }
+    ul span { background-color: #060606; }
     .caret {
         font-size: 32px;
         font-weight: bold;
         position: relative;
-        top: 4px;
     }
     input {
         position: absolute;

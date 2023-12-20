@@ -1,9 +1,9 @@
 <script>
     import { slide } from 'svelte/transition';
-	import { backIn } from 'svelte/easing';
+	import { backInOut } from 'svelte/easing';
 </script>
 
-<section id="logs" transition:slide={{ duration: 300, easing: backIn, axis: 'x' }}>
+<section id="logs" transition:slide={{ duration: 500, easing: backInOut, axis: 'x' }}>
     <div class="logContainer">   
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recustium expedita soluta accusamus maiores voluptatibus.</p>
         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspsamus maiores voluptatibus.</p>

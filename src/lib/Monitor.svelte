@@ -43,37 +43,85 @@
         <br>During the exploration, try toggling mission logs with command "LOG ON" / "LOG OFF", that way you'll get closer to the action.
     </p>
     <div class="monitor">
-        {#each $game.crew as crewmember}
-            <section>
-                <h1><ul><li>{crewmember.name}</li></ul></h1>
-                <p><strong>Status</strong>: {crewmember.status}<br>
-                    <strong>Health</strong>: {crewmember.health}</p>
-                <p>Distance from ship: {crewmember.distanceFromShip}<br>
-                    <strong>Movement</strong>: {crewmember.moovement}</p>
-                <p><strong>Inventory</strong>:
-                    <ul>
-                        {#each crewmember.inventory as inventory}
-                            <li>{inventory.name}</li>
-                        {/each}
-                    </ul>
-
-                <p><strong>Loot-bag</strong>: {crewmember.lootBag}</p>
-                <p><strong>Traits</strong>: {crewmember.traits}</p>
-            </section>
+        {#each $game.crew as crewmember (crewmember.id)}
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">{crewmember.name}</th>
+                    <th colspan="2">VIP Employee</th>
+                    <th colspan="2">Traits</th>
+                    <th colspan="2">Inventory</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Status</td>
+                    <td class="center stat">{crewmember.status}</td>
+                    <td>Distance</td>
+                    <td class="center stat">{crewmember.distanceFromShip}</td>
+                    <!-- <td>{crewmember.traits[0].name}</td>
+                    <td class="center stat">{crewmember.traits[0].value}</td> -->
+                    {#if crewmember.traits.length === 0}
+                        <td colspan="2" class="center stat"></td>
+                    {:else if crewmember.traits.length > 0}
+                        <td colspan="2" class="center stat">{crewmember.traits[0]}</td>
+                    {/if}
+                    <td colspan="2" rowspan="2" class="inventory">
+                        <ul>
+                            {#each crewmember.inventory as inventory}
+                                <li>{inventory.name}</li>
+                            {/each}
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Health</td>
+                    <td class="center stat">{crewmember.health}</td>
+                    <td>Productivity</td>
+                    <td class="center stat">{crewmember.productivity}</td>
+                    {#if crewmember.traits.length === 1 || crewmember.traits.length === 0}
+                        <td colspan="2" class="center stat"></td>
+                    {:else if crewmember.traits.length > 1}
+                        <td colspan="2" class="center stat">{crewmember.traits[1]}</td>
+                    {/if}
+                </tr>
+            </tbody>
+        </table>
         {/each}
     </div>
 </div>
 </main>
 
 <style>
-    section {
-        display: inline-block;
-        vertical-align: top;
-        width: 300px;
-        margin-bottom: 50px;
+    table { margin-top: 1em;}
+    thead {
+        height: 30px;
     }
-    h1 ul {
-        list-style: disclosure-open;
-        padding-left: 19px;
+    td, th {
+        min-width: 130px;
+        border: 1px solid var(--main-color);
+        background: #00ff000a;
+        padding-left: 10px;
+    }
+    th {
+        text-align: left;
+        font-size: 1.25em;
+        background: #00ff001c;
+    }
+    .center {text-align: center;}
+    .stat { 
+        background: none;
+        padding: 0;
+    }
+    ul {
+        list-style: disclosure-closed;
+        text-align: left;
+        margin: 0;
+        padding-left: 15px;
+    }
+    .inventory {
+        height: 91px;
+        min-width: 200px;
+        background: none;
     }
 </style>

@@ -6,12 +6,13 @@
   import Header   from './lib/Header.svelte';
   import MainMenu from './lib/MainMenu.svelte';
   import Monitor  from './lib/Monitor.svelte';
-  import Logs     from './lib/Logs.svelte';
   import Store    from './lib/Store.svelte';
+  import Logs     from './lib/Logs.svelte';
+  import Pause     from './lib/Pause.svelte';
   import Prompt   from './lib/Prompt.svelte'
 
   let errorLayer;
-  let view = 'store';
+  let view = 'monitor';
   let gameUI = true;
   let log = false;
   
@@ -68,9 +69,8 @@
       on:changeView={handleShowView}/>
     {/if}
     
-    {#if log}
-      <Logs />
-    {/if}
+    {#if view === 'pause'}<Pause />{/if}
+    {#if log}<Logs />{/if}
 
     <div class="bg bg_2"></div>
     <div class="bg bg_1"></div>
