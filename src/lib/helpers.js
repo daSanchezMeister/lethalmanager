@@ -3,9 +3,9 @@ export function getRandomInt(min, max) {
     return randomIntInRange;
 }
 
-export function roll(min, max) {
-    const randomIntInRange = Math.floor(Math.random() * (max - min + 1)) + min;
-    return randomIntInRange;
+export let dice = (max) => {
+    const result = Math.floor(Math.random() * max) + 1
+    return result
 }
 
 export const namesList = [

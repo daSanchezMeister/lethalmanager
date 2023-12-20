@@ -8,7 +8,7 @@
   import Monitor  from './lib/Monitor.svelte';
   import Store    from './lib/Store.svelte';
   import Logs     from './lib/Logs.svelte';
-  import Pause     from './lib/Pause.svelte';
+  import Pause    from './lib/Pause.svelte';
   import Prompt   from './lib/Prompt.svelte'
 
   let errorLayer;

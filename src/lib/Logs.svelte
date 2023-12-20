@@ -1,23 +1,28 @@
 <script>
-    import { slide } from 'svelte/transition';
+    import { afterUpdate } from 'svelte';
+
+    import { fade, slide } from 'svelte/transition';
 	import { backInOut } from 'svelte/easing';
+
+    import { logs } from "./game.js";
+
+    let logContainer;
+
+    afterUpdate(() => {
+        logContainer.scrollTop = logContainer.scrollHeight;
+    });
 </script>
 
 <section id="logs" transition:slide={{ duration: 500, easing: backInOut, axis: 'x' }}>
-    <div class="logContainer">   
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recustium expedita soluta accusamus maiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspsamus maiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae molmaiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae mollitia ducimus praesentium expusamus mabus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo per repellendus recusandae mollitia ducimus praesentium expedita soluta accusamus maiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae mollitia ducimus praesentium expedita soltibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae mollitia ducimus praesentium eamus maiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellem expedita soluta accusamus maiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae mollitia ducimus praesentium expedita soluta accusamus maiores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae mollitia ducimus praesentium expedita sores voluptatibus.</p>
-        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eos ad repudiandae nam amet dolore a ratione laudantium illo perspiciatis. Quas repellendus recusandae molluta accusamus maiores voluptatibus.</p>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Omnis labore corporis unde.</p>
+    <div bind:this={logContainer} class="logContainer scroll">   
+        {#each $logs as log}
+            <div transition:fade={{ duration: 250 }} class="log">
+                <p class={log.type}>
+                    <span>{log.time} > </span>
+                    {log.info}
+                </p>
+            </div>
+        {/each}
     </div>
     <div class="bg bg_2"></div>
     <div class="bg bg_1"></div>
@@ -38,5 +43,30 @@
     .logContainer {
         overflow-y: scroll;
         height: 100%;
+    }
+    span {
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.25em;
+    }
+    .global {
+        font-weight: 1.25em;
+    }
+    /* .random {
+
+    } */
+    .lethal {
+        animation: alert 1.5s infinite;
+    }
+    @keyframes alert {
+        0% {
+            background: #ff000040;
+        }
+        50% {
+            background: #ff000055;
+        }
+        100% {
+            background: #ff000040;
+        }
     }
 </style>

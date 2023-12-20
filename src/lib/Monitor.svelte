@@ -78,7 +78,17 @@
                     <td>Health</td>
                     <td class="center stat">{crewmember.health}</td>
                     <td>Productivity</td>
-                    <td class="center stat">{crewmember.productivity}</td>
+                    <td class="center stat">
+                        {#if crewmember.productivity === 1}    
+                            &#9733; &#9734; &#9734; &#9734;
+                        {:else if crewmember.productivity === 2}
+                            &#9733; &#9733; &#9734; &#9734;
+                        {:else if crewmember.productivity === 3}
+                            &#9733; &#9733; &#9733; &#9734;
+                        {:else}
+                            &#9733; &#9733; &#9733; &#9733;
+                        {/if}
+                    </td>
                     {#if crewmember.traits.length === 1 || crewmember.traits.length === 0}
                         <td colspan="2" class="center stat"></td>
                     {:else if crewmember.traits.length > 1}
