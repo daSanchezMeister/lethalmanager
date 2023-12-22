@@ -3,6 +3,12 @@ import { getRandomInt, dice, namesList, traitsList } from './helpers.js';
 
 import { loots } from './loots.js';
 
+
+let intervalId;
+const moonLevel = 0;
+export let dunjonDistance = 50;
+
+
 let crewGenerator = () => {
   let randomCaracter = {}
   let traitsNumber = getRandomInt(0, 2);
@@ -15,7 +21,10 @@ let crewGenerator = () => {
       health: 100,
       productivity: getRandomInt(1, 4),
       status: "Cryosleep",
+      location : "Outside",
       distanceFromShip: 0,
+      skipTurn: 0,
+      getOut: 0,
       inventory: [],
       lootBag: [],
       traits : [],
@@ -28,7 +37,10 @@ let crewGenerator = () => {
       health: 100,
       productivity: getRandomInt(1, 4),
       status: "Cryosleep",
+      location : "Outside",
       distanceFromShip: 0,
+      skipTurn: 0,
+      getOut: 0,
       inventory: [],
       lootBag: [],
       traits : [
@@ -43,7 +55,10 @@ let crewGenerator = () => {
       health: 100,
       productivity: getRandomInt(1, 4),
       status: "Cryosleep",
+      location : "Outside",
       distanceFromShip: 0,
+      skipTurn: 0,
+      getOut: 0,
       inventory: [],
       lootBag: [],
       traits : [
@@ -73,15 +88,13 @@ export let game = writable({
 export let logs = writable([]);
 export let shipStorage = writable([]);
 
-let intervalId;
-
 //////////////////////////////
 //SIMULATE START GAME COMMAND
 setTimeout(() => {
   game.update((game) => {
     game.live = true;
     game.crew.forEach(crewMember => {
-      crewMember.status = "Exploring";
+      crewMember.status = "Exploring moon";
     })
 
     intervalId = startGameLoop();
@@ -126,8 +139,6 @@ function missionEnd(time, message) {
 function startGameLoop() {
 
   let dangerMeter = 0;
-  const moonLevel = 1;
-  let distance;
   let currentTime, currentHour, currentMinute;
 
   const gameTick  = 3000;
@@ -180,12 +191,24 @@ function startGameLoop() {
   const handleProgress = () => {
     game.update((game) => {
       game.crew.forEach(crewMember => {
-        // EXPLORing / can proc ALL EXTERIOR EVENTS §§§§§§
-        if (crewMember.status === "Exploring") {
+        // EXPLORing moon / can proc ALL EXTERIOR EVENTS §§§§§§
+        if (crewMember.status === "Exploring moon") {
           crewMember.distanceFromShip += getRandomInt(4,8) + crewMember.productivity;
         }
-        if (crewMember.status === "Returning") {
+        if (crewMember.status === "Returning to ship") {
           crewMember.distanceFromShip -= getRandomInt(4,8) + crewMember.productivity; 
+        }
+        if (crewMember.status === "Seek for exit") {
+          if (crewMember.getOut > 0) {
+            crewMember.getOut--;
+            /////////////////////////
+            // ROLL FOR LOST EVENT
+            /////////////////////////
+          } else {
+            crewMember.location = "Outside";
+            crewMember.status = "Returning to ship"
+            logEntry("success", currentTime, `${crewMember.name} found the exit !`)
+          }
         }
         if (crewMember.distanceFromShip <= 0) {
           crewMember.status = "Waiting"; 
@@ -203,9 +226,12 @@ function startGameLoop() {
             `${crewMember.name} successfully get back to ship ! \n 
             Loots added to ship storage. What now ? go again ? play safe ?`)
           }
-          
-
-          
+        }
+        if (crewMember.distanceFromShip > dunjonDistance) {
+          crewMember.status = "Working"; 
+          crewMember.location = "Inside"; 
+          crewMember.distanceFromShip = dunjonDistance;
+          logEntry("success", currentTime, `${crewMember.name} Entered the abandonned complex and start working !`)
         }
 
 
@@ -246,33 +272,33 @@ function startGameLoop() {
       // choose random crew member
       // ROLL+(bonus) VS DIFICULTY IN RANDOM LOOT LIST
       game.update((game) => {
-        selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)];
+        selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)]
 
-        if (selectedCrewMember.lootBag.length < 4 && selectedCrewMember.status === "Exploring") {
-          const randomLoot = loots[getRandomInt(0, loots.length - 1)];
+        if (selectedCrewMember.lootBag.length < 4 && selectedCrewMember.status === "Working") {
+          const randomLoot = loots[getRandomInt(0, loots.length - 1)]
 
           if (dice(20) > randomLoot.difficulty) {
-            selectedCrewMember.lootBag.push(randomLoot);
+            selectedCrewMember.lootBag.push(randomLoot)
             
             
             if (selectedCrewMember.lootBag.length === 4) {
-              selectedCrewMember.status = "Returning";
-              logEntry("global", currentTime, `${selectedCrewMember.name} found ${randomLoot.name} ! (value ${randomLoot.value}) \n Loot bag is full, returning to ship !`) 
+              selectedCrewMember.status = "Seek for exit";
+              selectedCrewMember.getOut = Math.round(8 / selectedCrewMember.productivity);
+              logEntry("global", currentTime, `${selectedCrewMember.name} found ${randomLoot.name} ! (value ${randomLoot.value}) \n Loot bag is full, returning to ship to ship ! But wait... where deh fuck is the exit ?`) 
             } else {
-              logEntry("loot", currentTime, `${selectedCrewMember.name} found ${randomLoot.name} ! (value ${randomLoot.value})`
-            )
+              logEntry("loot", currentTime, `${selectedCrewMember.name} found ${randomLoot.name} ! (value ${randomLoot.value})`)
             }
           } else {
             logEntry("loot", currentTime, 
-              `${selectedCrewMember.name} found nothing !`
+              `${selectedCrewMember.name} look everywhere for some loot, but find nothing...`
             )
           }
 
         }
         return game
       })
-      // logEntry("loot", currentTime, "LOOT event")
     }
+
     if (randomRoll > 0.10 && randomRoll < 0.20) {
       // choose random crew member
       // ROLL(+bonus) VS DIFICULTY IN RANDOM ENVIRONEMENTAL EVENT IN LIST
