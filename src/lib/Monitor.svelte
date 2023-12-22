@@ -1,5 +1,9 @@
 <script>
-    import { game } from "./game.js"; 
+    import { fade, slide } from 'svelte/transition';
+    import { backInOut } from 'svelte/easing';
+
+    import { game, shipStorage } from "./game.js";
+
 </script>
 
 <main>
@@ -51,6 +55,7 @@
                     <th colspan="2">VIP Employee</th>
                     <th colspan="2">Traits</th>
                     <th colspan="2">Inventory</th>
+                    <th colspan="2">Loot bag</th>
                 </tr>
             </thead>
             <tbody>
@@ -58,7 +63,7 @@
                     <td>Status</td>
                     <td class="center stat">{crewmember.status}</td>
                     <td>Distance</td>
-                    <td class="center stat">{crewmember.distanceFromShip}</td>
+                    <td class="center stat">{crewmember.distanceFromShip === 0 ? 'Inside ship' : crewmember.distanceFromShip}</td>
                     <!-- <td>{crewmember.traits[0].name}</td>
                     <td class="center stat">{crewmember.traits[0].value}</td> -->
                     {#if crewmember.traits.length === 0}
@@ -70,6 +75,13 @@
                         <ul>
                             {#each crewmember.inventory as inventory}
                                 <li>{inventory.name}</li>
+                            {/each}
+                        </ul>
+                    </td>
+                    <td colspan="2" rowspan="2" class="lootbag">
+                        <ul>
+                            {#each crewmember.lootBag as loot}
+                                <li>{loot.name}</li>
                             {/each}
                         </ul>
                     </td>
@@ -99,19 +111,30 @@
         </table>
         {/each}
     </div>
+    <div class="ship">
+        <ul>
+            {#each $shipStorage as loot}
+                <li transition:slide={{ duration: 500, easing: backInOut, axis: 'x' }}>{loot.name} ({loot.value})</li>
+            {/each}
+        </ul>
+    </div>
 </div>
 </main>
 
 <style>
+    .ship, .monitor {
+        display: inline-block;
+        vertical-align: top;
+    }
     table { margin-top: 1em;}
     thead {
         height: 30px;
     }
     td, th {
-        min-width: 130px;
+        min-width: 100px;
         border: 1px solid var(--main-color);
         background: #00ff000a;
-        padding-left: 10px;
+        padding: 0 10px;
     }
     th {
         text-align: left;

@@ -13,6 +13,7 @@
     });
 </script>
 
+
 <section id="logs" transition:slide={{ duration: 500, easing: backInOut, axis: 'x' }}>
     <div bind:this={logContainer} class="logContainer scroll">   
         {#each $logs as log}
@@ -27,6 +28,7 @@
     <div class="bg bg_2"></div>
     <div class="bg bg_1"></div>
 </section>
+
 
 <style>
     section {
