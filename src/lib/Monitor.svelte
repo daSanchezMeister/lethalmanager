@@ -48,7 +48,7 @@
     <div class="monitor">
         {#each $game.crew as crewmember (crewmember.id)}
         <!-- <div class="crewmember"> -->
-        <table id="{crewmember.id}">
+        <table id="{crewmember.id}" class:dead={!crewmember.isAlive}>
             <!-- <span class="over"></span> -->
             <thead>
                 <tr>
@@ -84,11 +84,9 @@
                     </td>
                     <td colspan="2" class="map">
                         {#if crewmember.status === "Working" || crewmember.status === "Seek for exit"}
-                            (Unkown position)
+                            :/Unkown_position
                         {:else}
-                        <span class="progress" style="left: {Math.round(crewmember.distanceFromShip / dunjonDistance * 100)}%"></span>
-                        <svg id="elsQ2NGV8Mq1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 207 46" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
-                            <path d="M0,33.96107l5.805166-2.138745l6.721771,1.833209l8.402213-1.069373l6.263469,5.041329l15.276753-3.208119l4.124723-2.291513l2.291512-3.055351l1.680442,1.680443q4.430257-.000001,4.735792.305534t5.957933,2.138746l10.388191-1.985979L75.61992,33.65553l5.805166.611069l14.054613-.916605l12.985239-2.291513l3.66642-2.138745l2.291513,3.971955l1.527675-2.138745l6.110701,5.652399q5.652397-.305535,5.957932-.305535c.305535,0,16.193358-1.680443,16.498893-1.680443q.305535,0,15.123985-2.749816q6.416236,1.985979,6.416236,2.138746t7.94391-1.833211q4.430257-2.597048,4.735792-2.597048t7.943911-6.378044h20.318081l-.000001,23h-207.000001L0,33.96107Z" transform="matrix(1.045459 0 0 1.856062-4.704992-34.714921)" fill="rgba(0,255,0,0.6784313725490196)" stroke-width="0.5"/><path d="" fill="none" stroke="#3f5787" stroke-width="0.5"/></svg>
+                            <span class="progress" style="left: {Math.round(crewmember.distanceFromShip / dunjonDistance * 100)}%"></span>
                         {/if}
                     </td>
                     {#if crewmember.traits.length === 0}
@@ -158,18 +156,15 @@
 </main>
 
 <style>
+    .dead {
+        opacity: .75;
+        color: red;
+    }
+    .dead th { background-color: #ff00001c; }
     .map {
         position: relative;
         overflow: hidden;
         width: 200px;
-    }
-    .map svg {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        opacity: .5;
     }
     .map .progress {
         position: absolute;
@@ -275,7 +270,7 @@
         height: 30px;
     }
     td, th {
-        border: 1px solid var(--main-color);
+        /* border: 1px solid var(--main-color); */
         padding: 0 10px;
     }
     th {
