@@ -7,7 +7,7 @@ import { envEvents } from './envEvents.js';
 
 let intervalId;
 const moonLevel = 0;
-export let dunjonDistance = 50;
+export let dunjonDistance = 150;
 
 
 let crewGenerator = () => {
@@ -247,30 +247,6 @@ function startGameLoop() {
           crewMember.lootBag = [];
           crewMember.inventory = [];
         }
-
-
-
-        // DONJON / can proc ALL DONJON EVENTS §§§§§§
-        // distance : unknown
-        // quand ordre de sortir roll + productivity pour definir le temps pour sortir du donjon
-
-        // RETURN TO SHIP distance -= / can proc ALL EVENTS §§§§§§
-
-        // HIDE distance += 0 pour 5 tick de gameloop / prevent all event
-
-        // FIGHT distance += 0 pour 1 tick de gameloop / soit survis, soit (lost signal)
-
-        // RUN  distance += moovement*2 pour X tick de gameloop / can proc LOST
-
-        // LOST distance random + ou - pour 10 tick de gameloop / can proc CRISIS
-
-        // CRISIS scream for mommy / can proc Random MOB event
-
-        // TROLL proc troll event
-
-        // DEAD
-
-        // MISSING
       })
       return game;
     });
@@ -281,22 +257,21 @@ function startGameLoop() {
     const randomRoll = parseFloat(Math.random().toFixed(2));
     let selectedCrewMember;
 
-    //////////////////////////////////
-    // LOOT EVENT
-    //////////////////////////////////
-    if (randomRoll < 0.2) {
-      // choose random crew member
-      // ROLL+(bonus) VS DIFICULTY IN RANDOM LOOT LIST
-      game.update((game) => {
-        selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)]
+    game.update((game) => {
+      selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)]
 
-        if(selectedCrewMember.isAlive) {
+      if(selectedCrewMember.isAlive) {
+        //////////////////////////////////
+        // LOOT EVENT
+        //////////////////////////////////
+        if (randomRoll < 0.2) {
+          // choose random crew member
+          // ROLL+(bonus) VS DIFICULTY IN RANDOM LOOT LIST
           if (selectedCrewMember.lootBag.length < 4 && selectedCrewMember.status === "Working") {
             const randomLoot = loots[getRandomInt(0, loots.length - 1)]
-
             if (dice(20) > randomLoot.difficulty) {
               selectedCrewMember.lootBag.push(randomLoot)
-                 
+                  
               if (selectedCrewMember.lootBag.length === 4) {
                 selectedCrewMember.status = "Seek for exit";
                 selectedCrewMember.getOut = Math.round(8 / selectedCrewMember.productivity);
@@ -311,92 +286,66 @@ function startGameLoop() {
             }
           }
         }
-        return game
-      })
-    }
+        //////////////////////////////////
+        // ENVIRONEMENTAL EVENT
+        //////////////////////////////////
+        if (randomRoll > 0.20 && randomRoll < 0.30) {
+          // choose random crew member
+          // ROLL(+bonus) VS DIFICULTY IN RANDOM ENVIRONEMENTAL EVENT IN LIST
+          selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)];
 
-    //////////////////////////////////
-    // ENVIRONEMENTAL EVENT
-    //////////////////////////////////
-    if (randomRoll > 0.20 && randomRoll < 0.30) {
-      // choose random crew member
-      // ROLL(+bonus) VS DIFICULTY IN RANDOM ENVIRONEMENTAL EVENT IN LIST
-      game.update((game) => {
-        selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)];
-
-        const randomEnv = envEvents[getRandomInt(0, envEvents.length - 1)]
-        if(selectedCrewMember.isAlive) {
-          if(dice(20) < randomEnv.difficulty) {
-            // fail
-            selectedCrewMember.health -= randomEnv.damage;
-            
-            if(selectedCrewMember.health <= 0) {
-              selectedCrewMember.isAlive = false;
-              logEntry("lethal", currentTime, 
-                `${selectedCrewMember.name} ${randomEnv.dead}`
-              )
+          const randomEnv = envEvents[getRandomInt(0, envEvents.length - 1)]
+          if(selectedCrewMember.isAlive) {
+            if(dice(20) < randomEnv.difficulty) {
+              // fail
+              selectedCrewMember.health -= randomEnv.damage;
+              
+              if(selectedCrewMember.health <= 0) {
+                selectedCrewMember.isAlive = false;
+                logEntry("lethal", currentTime, 
+                  `${selectedCrewMember.name} ${randomEnv.dead}`
+                )
+              } else {
+                logEntry("lethal", currentTime, 
+                  `${selectedCrewMember.name} ${randomEnv.lost}`
+                )
+              }
             } else {
-              logEntry("lethal", currentTime, 
-                `${selectedCrewMember.name} ${randomEnv.lost}`
+              // success
+              logEntry("environement", currentTime, 
+                `${selectedCrewMember.name} ${randomEnv.win}`
               )
             }
-          } else {
-            // success
-            logEntry("environement", currentTime, 
-              `${selectedCrewMember.name} ${randomEnv.win}`
-            )
+          }
+        }
+        //////////////////////////////////
+        // RANDOM EVENTS
+        //////////////////////////////////
+        if (randomRoll > 0.30 && randomRoll < 0.40) {
+          logEntry("random", currentTime, "RANDOM event proc")
+        }
+        //////////////////////////////////
+        // TRAITS EVENT
+        //////////////////////////////////
+        if (randomRoll > 0.4 && randomRoll < 0.45) {
+          logEntry("trait", currentTime, "TRAIT event proc")
+        }
+        //////////////////////
+        // MOB EVENTS !!!!!!!
+        if(dangerMeter >= 4) {
+          let lethalEventRoll = dice(100);
+          console.log('lethalEventRoll : ' + lethalEventRoll);
+          if (lethalEventRoll < dangerMeter) {
+            // ROLL VS DIFICULTY IN RANDOM LETHAL EVENT IN LIST
+            // roll for scan, create entry in Encyclopedia
+            logEntry("lethal", currentTime, "LETHAL EVENT PROC !")
           }
         }
 
-        return game
-      })
-    }
-    //////////////////////////////////
-    // RANDOM EVENTS
-    //////////////////////////////////
-    if (randomRoll > 0.30 && randomRoll < 0.40) {
-      // choose random crew member
-      // ROLL IN RANDOM EVENTS LIST ? funny shit here ?
-      // scary noise can prop HIDE / RUN par exemple
-      game.update((game) => {
-        selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)];
-        console.log(selectedCrewMember.name + ' proc RANDOM event !');
+      } // end isAlive check
 
-        return game
-      })
-      logEntry("random", currentTime, "RANDOM event proc")
-    }
-    //////////////////////////////////
-    // TRAITS EVENT
-    //////////////////////////////////
-    if (randomRoll > 0.4 && randomRoll < 0.45) {
-      // choose random crew member
-      // PROC A CREWMEMBER TRAIT ! CAN BE DEADLY? CAN BE GOOD? IT DEPEND
-      game.update((game) => {
-        selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)];
-        const traits = selectedCrewMember.traits.length;
-        if (traits) {
-          console.log(selectedCrewMember.name + ' have traits to proc')
-        }
-        console.log(selectedCrewMember.name + ' proc TRAITS event !');
-
-        return game
-      })
-      logEntry("trait", currentTime, "TRAIT event proc")
-    }
-
-    //////////////////////
-    // MOB EVENTS !!!!!!!
-    if(dangerMeter >= 4) {
-      let lethalEventRoll = dice(100);
-      console.log('lethalEventRoll : ' + lethalEventRoll);
-      if (lethalEventRoll < dangerMeter) {
-        // ROLL VS DIFICULTY IN RANDOM LETHAL EVENT IN LIST
-        // roll for scan, create entry in Encyclopedia
-        logEntry("lethal", currentTime, "LETHAL EVENT PROC !")
-      }
-    }
-  
+      return game
+    })
   }
 
   // Retourne l'identifiant de l'intervalle pour pouvoir l'arrêter plus tard si nécessaire

@@ -189,7 +189,7 @@
         animation-duration: 1.5s;
     }
     .health.med polyline { 
-        stroke: #ff5100ad; 
+        stroke: #ff4800bf; 
     }
     .health.med .fade-in, .health.med .fade-out {
         animation-duration: 1s;
@@ -209,6 +209,7 @@
         left: 0;
         right: 0;
         bottom: 0;
+        z-index: -2;
     }
     .fade-in, .fade-out {
         position: absolute;
