@@ -48,7 +48,7 @@
     <div class="monitor">
         {#each $game.crew as crewmember (crewmember.id)}
         <!-- <div class="crewmember"> -->
-        <table id="{crewmember.id}" class:dead={!crewmember.isAlive}>
+        <table id="{crewmember.id}" class:midhp={crewmember.health <= 50 && crewmember.health > 0} class:dead={!crewmember.isAlive}>
             <!-- <span class="over"></span> -->
             <thead>
                 <tr>
@@ -74,20 +74,26 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Location</td>
+                    <td>Location :</td>
                     <td class="center">
                         {#if (crewmember.distanceFromShip === 0)}
-                            In ship
+                            Safe
                         {:else}
                             {crewmember.location}
                         {/if}
                     </td>
                     <td colspan="2" class="map">
-                        {#if crewmember.status === "Working" || crewmember.status === "Seek for exit"}
-                            :/Unkown_position
-                        {:else}
-                            <span class="progress" style="left: {Math.round(crewmember.distanceFromShip / dunjonDistance * 100)}%"></span>
-                        {/if}
+                        <span class="progress" style="width: {Math.round(crewmember.distanceFromShip / dunjonDistance * 100)}%">
+                            {#if crewmember.status === "Working"}
+                                Scavenging...
+                            {:else if crewmember.status === "Seek for exit"}
+                                Finding way out
+                            {:else if crewmember.status === "Dead"}
+                                Lost signal...
+                            {:else if crewmember.status === "Panic attack"}
+                                ???
+                            {/if}
+                        </span>
                     </td>
                     {#if crewmember.traits.length === 0}
                         <td colspan="2" class="center"></td>
@@ -110,7 +116,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Health</td>
+                    <td>Health :</td>
                     <td class="center health" 
                         class:high={crewmember.health > 66 && crewmember.health <= 100}
                         class:med={crewmember.health > 33 && crewmember.health <= 66}
@@ -124,7 +130,21 @@
                             <div class="fade-out"></div>
                           </div>
                     </td>
-                    <td colspan="2">free space</td>
+                    <td>Sanity :</td>
+                    <!-- {crewmember.sanity} -->
+                    <td>
+                        {#if crewmember.sanity > 75}
+                            Feels good
+                        {:else if crewmember.sanity > 50 && crewmember.sanity <= 75}
+                            Little scared
+                        {:else if crewmember.sanity > 25 && crewmember.sanity <= 50}
+                            Dangerously scared
+                        {:else if crewmember.sanity > 1 && crewmember.sanity <= 25}
+                            Close to madness
+                        {:else if crewmember.sanity === 0}
+                            Insane !
+                        {/if}
+                    </td>
                     <!-- <td colspan="2" class="map">
                         {#if crewmember.status === "Working"}
                             (Unkown position)
@@ -156,11 +176,18 @@
 </main>
 
 <style>
+    .midhp th { 
+        animation: midhp 1s infinite; 
+    }
+    @keyframes midhp {
+        0% { background-color: #ff480033; }
+        50% { background-color: #ff48006b; }
+        100% { background-color: #ff480033; }
+    }
     .dead {
         opacity: .75;
         color: red;
     }
-    .dead th { background-color: #ff00001c; }
     .map {
         position: relative;
         overflow: hidden;
@@ -168,16 +195,20 @@
     }
     .map .progress {
         position: absolute;
-        top: 0;
+        top: 25%; bottom: 25%;
         left: 0;
-        bottom: 0;
         opacity: .5;
-        border: 3px dotted red;
-        width: 2px;
+        border-right: 5px solid red;
+        width: 0px;
+        background-color: #00ff001c;
 
-        transition-property: left;
+        overflow: hidden;
+        text-align: center;
+
+        transition-property: width;
         transition-duration: 2s;
     }
+    .dead th, .dead .progress { background: #ff00001c; }
     .health { 
         position: relative;
         overflow: hidden;
@@ -200,7 +231,7 @@
     .health.low .fade-in, .health.low .fade-out {
         animation-duration: .5s;
     }
-    .health.dead svg { display: none; }
+    .health.dead .heart-rate { display: none; }
 
     .heart-rate {
         position: absolute;
@@ -266,6 +297,7 @@
     table { 
         margin-top: 1em;
         position: relative;
+        max-height: 127px;
     }
     thead {
         height: 30px;
@@ -273,6 +305,7 @@
     td, th {
         /* border: 1px solid var(--main-color); */
         padding: 0 10px;
+        overflow: hidden;
     }
     th {
         text-align: left;

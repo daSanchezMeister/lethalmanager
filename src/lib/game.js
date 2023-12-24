@@ -1,13 +1,15 @@
 import { writable } from 'svelte/store';
-import { getRandomInt, dice, namesList, traitsList } from './helpers.js';
+import { getRandomInt, dice, namesList } from './helpers.js';
 
-import { loots } from './loots.js';
-import { envEvents } from './envEvents.js';
+import { procLoot } from './loots.js';
+import { procEnvEvent } from './envEvents.js';
+import { procRandomEvent } from './randomEvents.js';
+import { traitsList } from './traitEvents.js';
 
 
 let intervalId;
 const moonLevel = 0;
-export let dunjonDistance = 150;
+export let dunjonDistance = 50;
 
 
 let crewGenerator = () => {
@@ -20,8 +22,10 @@ let crewGenerator = () => {
       isAlive: true,
       name: namesList[getRandomInt(0, namesList.length - 1)],
       health: 100,
+      sanity : 100,
       productivity: getRandomInt(1, 4),
       status: "Cryosleep",
+      lastStatus: "",
       location : "Outside",
       distanceFromShip: 0,
       skipTurn: 0,
@@ -36,8 +40,10 @@ let crewGenerator = () => {
       isAlive: true,
       name: namesList[getRandomInt(0, namesList.length - 1)],
       health: 100,
+      sanity : 100,
       productivity: getRandomInt(1, 4),
       status: "Cryosleep",
+      lastStatus: "",
       location : "Outside",
       distanceFromShip: 0,
       skipTurn: 0,
@@ -54,8 +60,10 @@ let crewGenerator = () => {
       isAlive: true,
       name: namesList[getRandomInt(0, namesList.length - 1)],
       health: 100,
+      sanity : 100,
       productivity: getRandomInt(1, 4),
       status: "Cryosleep",
+      lastStatus: "",
       location : "Outside",
       distanceFromShip: 0,
       skipTurn: 0,
@@ -206,20 +214,29 @@ function startGameLoop() {
               /////////////////////////
               // ROLL FOR LOST EVENT
               /////////////////////////
-              /////////////////////////
-              /////////////////////////
-              /////////////////////////
-              /////////////////////////
-              /////////////////////////
-              /////////////////////////
             } else {
               crewMember.location = "Outside";
               crewMember.status = "Returning to ship"
-              logEntry("success", currentTime, `${crewMember.name} found the exit !`)
+              logEntry("success", currentTime, `${crewMember.name} found abandonned complex exit !`)
+            }
+          }
+          if (crewMember.status === "Panic attack") {
+            if (crewMember.skipTurn > 0) {
+              crewMember.skipTurn--;
+              if (crewMember.lootBag.length > 0) {
+                if (dice(20) < 10 - crewMember.productivity) {
+                  crewMember.lootBag.splice([getRandomInt(0, crewMember.lootBag.length - 1)], 1);
+                  logEntry("global", currentTime, `${crewMember.name} lost a loot in panic attack !`);
+                }
+              }
+            } else {
+              crewMember.status = crewMember.lastStatus;
+              crewMember.sanity = 25 * crewMember.productivity;
+              logEntry("success", currentTime, `${crewMember.name} survived panic attack and is now back to work !`)
             }
           }
           if (crewMember.distanceFromShip <= 0) {
-            crewMember.status = "Waiting"; 
+            crewMember.status = "Waiting at ship"; 
             crewMember.distanceFromShip = 0;
 
             if (crewMember.lootBag.length > 0) {
@@ -231,8 +248,8 @@ function startGameLoop() {
               })
               crewMember.lootBag = [];
               logEntry("success", currentTime, 
-              `${crewMember.name} successfully get back to ship ! \n 
-              Loots added to ship storage. What now ? go again ? play safe ?`)
+                `${crewMember.name} successfully get back to ship ! \n 
+                Loots added to ship storage. What now ? go again ? play safe ?`)
             }
           }
           if (crewMember.distanceFromShip > dunjonDistance) {
@@ -244,6 +261,7 @@ function startGameLoop() {
 
         } else {
           crewMember.status = "Dead";
+          crewMember.sanity = "";
           crewMember.lootBag = [];
           crewMember.inventory = [];
         }
@@ -255,90 +273,46 @@ function startGameLoop() {
   // Fonction pour gérer les jets de dés et les événements aléatoires
   const handleRandomEvents = () => {
     const randomRoll = parseFloat(Math.random().toFixed(2));
-    let selectedCrewMember;
 
     game.update((game) => {
-      selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)]
+      let selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)]
 
-      if(selectedCrewMember.isAlive) {
+      if(selectedCrewMember.isAlive && selectedCrewMember.status !== "Waiting at ship") {
         //////////////////////////////////
         // LOOT EVENT
         //////////////////////////////////
-        if (randomRoll < 0.2) {
-          // choose random crew member
-          // ROLL+(bonus) VS DIFICULTY IN RANDOM LOOT LIST
-          if (selectedCrewMember.lootBag.length < 4 && selectedCrewMember.status === "Working") {
-            const randomLoot = loots[getRandomInt(0, loots.length - 1)]
-            if (dice(20) > randomLoot.difficulty) {
-              selectedCrewMember.lootBag.push(randomLoot)
-                  
-              if (selectedCrewMember.lootBag.length === 4) {
-                selectedCrewMember.status = "Seek for exit";
-                selectedCrewMember.getOut = Math.round(8 / selectedCrewMember.productivity);
-                logEntry("global", currentTime, `${selectedCrewMember.name} found ${randomLoot.name} ! (value ${randomLoot.value}) \n Loot bag is full, returning to ship to ship ! But wait... where deh fuck is the exit ?`) 
-              } else {
-                logEntry("loot", currentTime, `${selectedCrewMember.name} found ${randomLoot.name} ! (value ${randomLoot.value})`)
-              }
-            } else {
-              logEntry("loot", currentTime, 
-                `${selectedCrewMember.name} look everywhere for some loot, but find nothing...`
-              )
-            }
-          }
+        if (randomRoll < 0.20 && selectedCrewMember.lootBag.length < 4 && selectedCrewMember.status === "Working") {
+          let result = procLoot(selectedCrewMember);
+          logEntry(result.type, currentTime, result.message);
         }
         //////////////////////////////////
         // ENVIRONEMENTAL EVENT
         //////////////////////////////////
         if (randomRoll > 0.20 && randomRoll < 0.30) {
-          // choose random crew member
-          // ROLL(+bonus) VS DIFICULTY IN RANDOM ENVIRONEMENTAL EVENT IN LIST
-          selectedCrewMember = game.crew[getRandomInt(0, game.crew.length - 1)];
-
-          const randomEnv = envEvents[getRandomInt(0, envEvents.length - 1)]
-          if(selectedCrewMember.isAlive) {
-            if(dice(20) < randomEnv.difficulty) {
-              // fail
-              selectedCrewMember.health -= randomEnv.damage;
-              
-              if(selectedCrewMember.health <= 0) {
-                selectedCrewMember.isAlive = false;
-                logEntry("lethal", currentTime, 
-                  `${selectedCrewMember.name} ${randomEnv.dead}`
-                )
-              } else {
-                logEntry("lethal", currentTime, 
-                  `${selectedCrewMember.name} ${randomEnv.lost}`
-                )
-              }
-            } else {
-              // success
-              logEntry("environement", currentTime, 
-                `${selectedCrewMember.name} ${randomEnv.win}`
-              )
-            }
-          }
+          let result = procEnvEvent(selectedCrewMember);
+          logEntry(result.type, currentTime, result.message); 
         }
         //////////////////////////////////
         // RANDOM EVENTS
         //////////////////////////////////
-        if (randomRoll > 0.30 && randomRoll < 0.40) {
-          logEntry("random", currentTime, "RANDOM event proc")
+        if (randomRoll > 0.30 && randomRoll < 0.50 && selectedCrewMember.status !== "Panic attack") {
+          let result = procRandomEvent(selectedCrewMember);
+          logEntry(result.type, currentTime, result.message); 
         }
         //////////////////////////////////
         // TRAITS EVENT
         //////////////////////////////////
         if (randomRoll > 0.4 && randomRoll < 0.45) {
-          logEntry("trait", currentTime, "TRAIT event proc")
+          //logEntry("trait", currentTime, "TRAIT event proc")
         }
         //////////////////////
         // MOB EVENTS !!!!!!!
         if(dangerMeter >= 4) {
           let lethalEventRoll = dice(100);
-          console.log('lethalEventRoll : ' + lethalEventRoll);
           if (lethalEventRoll < dangerMeter) {
             // ROLL VS DIFICULTY IN RANDOM LETHAL EVENT IN LIST
             // roll for scan, create entry in Encyclopedia
-            logEntry("lethal", currentTime, "LETHAL EVENT PROC !")
+            //logEntry("lethal", currentTime, "LETHAL EVENT PROC !")
           }
         }
 

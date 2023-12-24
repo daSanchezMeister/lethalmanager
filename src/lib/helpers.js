@@ -20,13 +20,3 @@ export const namesList = [
     'Christopher', 'Hazel', 'Nathan', 'Freya', 'Emily', 'Finn', 'Natalie', 'Lucy', 'Thomas', 'Luna',
     'Eliott', 'Mila', 'Liam', 'Ella', 'Isabel', 'Robert', 'Maya', 'Henry', 'Adele', 'Luke', 'Clara'
 ];
-
-export const traitsList = [
-    'Lucky', 'Unlucky', 
-    'Fighter', 'Coward', 
-    'Speedrunner', 'Lazy', 
-    'Greedy', 'Altruist', 'Narcissist', 'Sociopath', 
-    'Noob', 'Pro Gamer', 'Troll',
-    'Hacker', 'Twitch Streamer', 'Youtuber', 'Tiktoker', 'Hipster', 
-    'Alpha', 'Beta', 'Omega', 'Chad', 'Boomer',
-]
