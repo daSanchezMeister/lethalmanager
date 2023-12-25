@@ -41,9 +41,6 @@ export const loots = [
 
 export const procLoot = (crewMember) => {
 
-    const bonuses = crewMember.inventory.filter((item) => item.type === "tool").map((item) => item.bonus).reduce((acc, value) => acc + value, 0);;
-    console.log(bonuses);
-
     let eventResult = {
         name: crewMember.name,
         type: "loot",
@@ -51,7 +48,7 @@ export const procLoot = (crewMember) => {
     }
 
     const randomLoot = loots[getRandomInt(0, loots.length - 1)]
-    if (dice(20)+bonuses > randomLoot.difficulty) {
+    if (dice(20, crewMember) > randomLoot.difficulty) {
 
         crewMember.lootBag.push(randomLoot) 
         

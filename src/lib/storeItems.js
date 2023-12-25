@@ -13,38 +13,71 @@ export const store_crew = [
         id: 2,
         name: 'Talkie',
         bonus: 2,
-        price: 20,
+        price: 30,
         info: 'A simple talkie, useful to communicate with other crew members. Boost productivity.',
         type: 'tool'
     },
     {
         id: 3,
-        name: 'Railgun',
-        price: 100,
-        info: 'Anihilate an ennemy, but very long to reaload, if you missed your shot, you better run buddy',
-        type: 'weapon'
+        name: 'Magic_dice',
+        bonus: 6,
+        price: 230,
+        info: 'Give the owner a significant luck boost!',
+        type: 'tool'
     },
     {
         id: 4,
-        name: 'Medkit',
-        bonus: 50,
-        price: 75,
-        info: 'Heal 50hp after an encounter with an ennemy, but you can only use it once per day',
-        type: 'tool'
+        name: 'Plastic_armor',
+        ratio: 1.25,
+        price: 68,
+        info: '',
+        type: 'armor'
+    },
+    {
+        id: 5,
+        name: 'Scap_metal_armor',
+        ratio: 1.5,
+        price: 122,
+        info: '',
+        type: 'armor'
+    },
+    {
+        id: 6,
+        name: 'Titanium_armor',
+        ratio: 2,
+        price: 241,
+        info: '',
+        type: 'armor'
+    },
+    {
+        id: 7,
+        name: 'Sonic_boots',
+        price: 126,
+        bonus: 15,
+        info: '',
+        type: 'moovement'
+    },
+    {
+        id: 8,
+        name: 'Winged_boots',
+        price: 83,
+        bonus: 10,
+        info: '',
+        type: 'moovement'
     }
 ];
 export const store_ship = [
     {
         id: 1,
         name: 'Teleporter',
-        price: 200,
+        price: 282,
         info: 'A simple teleporter, useful to teleport from one place to another.',
         type: 'tool'
     },
     {
         id: 2,
         name: 'Inverse_Teleporter',
-        price: 300,
+        price: 361,
         info: 'A simple inverse teleporter, teleport your crew member directly in hell',
         type: 'tool'
     }

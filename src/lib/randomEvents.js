@@ -51,14 +51,14 @@ export const randomDunjonEvents = [
         type: "danger",
         name: "See a monster",
         sanityDamage: 60,
-        desc: "just saw a monster running that way ! We should get back no ?'",
+        desc: "just saw a monster running that way ! We should get back no ?",
     },
     {
         id: 4,
         type: "global",
         name: "Tell a story",
         sanityBoost: 25,
-        desc: "tell an epic story about 4 prisoners that escaped a tyranic corporation... but forget the end...",
+        desc: "start telling an epic story about 4 dedicated worker that escaped a tyranic corporation... but forgot the end...",
     }
 ]
 

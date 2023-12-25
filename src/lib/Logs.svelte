@@ -33,19 +33,17 @@
 <style>
     section {
         display: block;
-        width: 500px;
+        width: 600px;
 
         background-color: #1d1d55;
 
         position: absolute;
         right: 0; top: 0; bottom: 0;
-        z-index: 1;
-        
+        z-index: 1; 
     }
     .logContainer {
         overflow-y: scroll;
         height: 100%;
-        /* padding: 10px 0; */
     }
     .log { padding: 5px 15px; }
     .log p { margin: 5px; }

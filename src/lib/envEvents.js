@@ -74,14 +74,14 @@ export const envEventsDunjon = [
         difficulty: 10,
         damage: 100,
         win: "almost fall over a broken fence.",
-        dead: "fall over a en fence... We can see the body 6 floors down... RIP.",
+        dead: "just falled over a broken fence... We can see the body 6 floors down... RIP.",
         counter: "Flashlight",
     }
 ]
 
 export const procEnvEvent = (crewMember) => {
     // sum all bonuses from inventory
-    const bonuses = crewMember.inventory.filter((item) => item.type === "tool").map((item) => item.bonus).reduce((acc, value) => acc + value, 0);;
+    // const itemBonuses = crewMember.inventory.filter((item) => item.type === "tool").map((item) => item.bonus).reduce((acc, value) => acc + value, 0);
     
     let randomEnv;
     let eventResult = {
@@ -97,6 +97,8 @@ export const procEnvEvent = (crewMember) => {
     }
 
     const hasCounter = crewMember.inventory.some((item) => item.name == randomEnv.counter);
+    // const isPro = crewMember.traits.some((trait) => trait.name === "Pro Gamer");
+    // const diceBonus = isPro ? 2 : 0;
 
     if (randomEnv.counter && hasCounter) {      
         
@@ -104,7 +106,7 @@ export const procEnvEvent = (crewMember) => {
         eventResult.message = `${crewMember.name} ${randomEnv.win} Saw it with the ${randomEnv.counter} !`;
         //return eventResult;
 
-    } else if (dice(20)+bonuses < randomEnv.difficulty) {
+    } else if (dice(20, crewMember) < randomEnv.difficulty) {
         // fail
         crewMember.health -= randomEnv.damage;
         

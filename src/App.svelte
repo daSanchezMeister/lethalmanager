@@ -14,7 +14,7 @@
   let errorLayer;
   let view = 'monitor';
   let gameUI = true;
-  let log = false;
+  let log = true;
   
   const handleShowView = (event) => {
     view = event.detail.view;

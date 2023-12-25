@@ -17,13 +17,14 @@ const mobExtEvents = [
         difficulty: 9,
         damage: 100,
         win: "manage to sneak around a big ass giant alien, better stay sneaky.",
+        lost: "got catched by the Giant but somehow manage to escape it, not without behing hurt bad.",
         dead: "got catched and eated alive by a biggg giant alien..."
     },
     {
         id: 3,
         name: "Dune worm",
         difficulty: 10,
-        damage: 100,
+        damage: 300,
         win: "WTF I ALMOST GOT EATED BY A DUNE WORM????",
         dead: "just dispeared in a loud jurassic park sound... Is that a Dune worm in the sky ? huh ?",
     }
@@ -54,6 +55,7 @@ const mobDunjonEvents = [
         difficulty: 10,
         damage: 100,
         win: "saw a large alien egg that looks pretty much alive, better avoid it.",
+        lost: "got choked by a Face Hugger but somehow manage to get him off and throw it over the fence.",
         dead: "run everywhere to avoid a Face Hugger, but it was too fast...",
     },
     {
@@ -62,7 +64,8 @@ const mobDunjonEvents = [
         difficulty: 15,
         damage: 100,
         win: "somehow manage to avoid a big Xenomorph. Damn, that was close.",
-        dead: "heard a strange noise from behind, next second a Xenomorph jump on you and rip your head off...",
+        lost: "Get hit by the tail of a Xenomorph. Somehow manage to survive but it hurts a lot.",
+        dead: "head roll over the floor... An adult Xenomorph sneak up through the ventilation...",
     },
     {
         id: 5,
@@ -78,25 +81,26 @@ const mobDunjonEvents = [
 export const procMobEvent = (crewMember) => {
 
     let randomMob;
+    let ratio = 1;
     let eventResult = {
         name: crewMember.name,
         type: "",
         message: "",
     }
 
-    if (crewMember.location === "Outside") {
-        randomMob = mobExtEvents[getRandomInt(0, mobExtEvents.length - 1)]
-    } else {
-        randomMob = mobDunjonEvents[getRandomInt(0, mobDunjonEvents.length - 1)]
-    }
+    crewMember.location === "Outside" ? randomMob = mobExtEvents[getRandomInt(0, mobExtEvents.length - 1)] : randomMob = mobDunjonEvents[getRandomInt(0, mobDunjonEvents.length - 1)]
 
-    // crewMember.inventory.forEach(item => {
+    // const isPro = crewMember.traits.some((trait) => trait.name === "Pro Gamer");
+    // const diceBonus = isPro ? 2 : 0;
 
-    // })
+    const roll = dice(20, crewMember);
 
-    if(dice(20) < randomMob.difficulty) {
+    if(roll < randomMob.difficulty) {
         // fail
-        crewMember.health -= randomMob.damage;
+        const hasArmor = crewMember.inventory.find(item => item.type === "armor");
+        if(hasArmor) { ratio = hasArmor.ratio; }
+        
+        crewMember.health -= Math.round(randomMob.damage / ratio);
         
         if(crewMember.health <= 0) {
             crewMember.isAlive = false;
