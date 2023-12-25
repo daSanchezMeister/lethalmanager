@@ -48,7 +48,7 @@
     <div class="monitor">
         {#each $game.crew as crewmember (crewmember.id)}
         <!-- <div class="crewmember"> -->
-        <table id="{crewmember.id}" class:midhp={crewmember.health <= 50 && crewmember.health > 0} class:dead={!crewmember.isAlive}>
+        <table id="{crewmember.id}" class:dead={!crewmember.isAlive}>
             <!-- <span class="over"></span> -->
             <thead>
                 <tr>
@@ -136,13 +136,13 @@
                         {#if crewmember.sanity > 75}
                             Feels good
                         {:else if crewmember.sanity > 50 && crewmember.sanity <= 75}
-                            Little scared
+                            Anxious
                         {:else if crewmember.sanity > 25 && crewmember.sanity <= 50}
-                            Dangerously scared
+                            Scared
                         {:else if crewmember.sanity > 1 && crewmember.sanity <= 25}
                             Close to madness
                         {:else if crewmember.sanity === 0}
-                            Insane !
+                            Went insane !
                         {/if}
                     </td>
                     <!-- <td colspan="2" class="map">
@@ -176,14 +176,6 @@
 </main>
 
 <style>
-    .midhp th { 
-        animation: midhp 1s infinite; 
-    }
-    @keyframes midhp {
-        0% { background-color: #ff480033; }
-        50% { background-color: #ff48006b; }
-        100% { background-color: #ff480033; }
-    }
     .dead {
         opacity: .75;
         color: red;

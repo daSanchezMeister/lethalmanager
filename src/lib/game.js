@@ -4,12 +4,13 @@ import { getRandomInt, dice, namesList } from './helpers.js';
 import { procLoot } from './loots.js';
 import { procEnvEvent } from './envEvents.js';
 import { procRandomEvent } from './randomEvents.js';
+import { procMobEvent } from './mobEvents.js';
 import { traitsList } from './traitEvents.js';
 
 
 let intervalId;
 const moonLevel = 0;
-export let dunjonDistance = 50;
+export let dunjonDistance = 200;
 
 
 let crewGenerator = () => {
@@ -30,7 +31,9 @@ let crewGenerator = () => {
       distanceFromShip: 0,
       skipTurn: 0,
       getOut: 0,
-      inventory: [],
+      inventory: [
+
+      ],
       lootBag: [],
       traits : [],
     }
@@ -48,7 +51,24 @@ let crewGenerator = () => {
       distanceFromShip: 0,
       skipTurn: 0,
       getOut: 0,
-      inventory: [],
+      inventory: [
+        {
+          id: 1,
+          name: 'Flashlight',
+          bonus: 1,
+          price: 15,
+          info: 'A simple flashlight, useful to see in the dark.',
+          type: 'tool'
+        },
+        {
+            id: 2,
+            name: 'Talkie',
+            bonus: 2,
+            price: 20,
+            info: 'A simple talkie, useful to communicate with other crew members. Boost productivity.',
+            type: 'tool'
+        },
+      ],
       lootBag: [],
       traits : [
         traitsList[getRandomInt(0, traitsList.length - 1)],
@@ -68,7 +88,24 @@ let crewGenerator = () => {
       distanceFromShip: 0,
       skipTurn: 0,
       getOut: 0,
-      inventory: [],
+      inventory: [
+        {
+          id: 1,
+          name: 'Flashlight',
+          bonus: 1,
+          price: 15,
+          info: 'A simple flashlight, useful to see in the dark.',
+          type: 'tool'
+        },
+        {
+            id: 2,
+            name: 'Talkie',
+            bonus: 2,
+            price: 20,
+            info: 'A simple talkie, useful to communicate with other crew members. Boost productivity.',
+            type: 'tool'
+        },
+      ],
       lootBag: [],
       traits : [
         traitsList[getRandomInt(0, traitsList.length - 1)],
@@ -83,6 +120,7 @@ let crewGenerator = () => {
 // MAIN GAME OBJECT
 export let game = writable({
     live: false,
+    alive: 4,
     money: 60,
     hour: 8,
     minute: 0,
@@ -109,8 +147,10 @@ setTimeout(() => {
     intervalId = startGameLoop();
     return game;
   });
-}, 1000);
+}, 2000);
 
+//////////////////////////////
+// LOG OBJECT
 function logEntry(type, time, info) {
   //****************** 
   // PLAY LOG SOUND HERE
@@ -125,7 +165,7 @@ function logEntry(type, time, info) {
   })
 }
 
-function missionEnd(time, message) {
+function missionEnd(type, time, message) {
   game.update((game) => {
     game.live = false;
     game.crew.forEach(crewMember => {
@@ -135,7 +175,7 @@ function missionEnd(time, message) {
     return game;
   });
 
-  logEntry('global', time, message)
+  logEntry(type, time, message)
   // do the math on loot !
   // quota 
   // bilan de missions
@@ -181,8 +221,13 @@ function startGameLoop() {
       if (game.hour === 24) {
         game.hour = 0;
         game.minute = 0;
-        // SET CREWMEMBER MISSING IF DISTANCE > 10
-        missionEnd(currentTime, 'Day is over, autopilot return to the company.');
+
+        missionEnd("global", currentTime, 'Day is over, autopilot return to the company.');
+        game.crew.forEach(crewMember => {
+          if (crewMember.isAlive && crewMember.status !== "Waiting at ship") {
+            crewMember.status = "Missing";
+          }
+        })
         clearInterval(intervalId);
       }
 
@@ -199,8 +244,12 @@ function startGameLoop() {
   // HANDLE STATUS FOR EVERYCREW MEMBER
   const handleProgress = () => {
     game.update((game) => {
+      if (game.alive === 0) {
+        missionEnd("lethal", currentTime, 'All crew members are dead, mission failed.');
+        clearInterval(intervalId);
+      }
       game.crew.forEach(crewMember => {
-        // EXPLORing moon / can proc ALL EXTERIOR EVENTS §§§§§§
+        // EXPLORing moon
         if (crewMember.isAlive) {
           if (crewMember.status === "Exploring moon") {
             crewMember.distanceFromShip += getRandomInt(4,8) + crewMember.productivity;
@@ -226,7 +275,7 @@ function startGameLoop() {
               if (crewMember.lootBag.length > 0) {
                 if (dice(20) < 10 - crewMember.productivity) {
                   crewMember.lootBag.splice([getRandomInt(0, crewMember.lootBag.length - 1)], 1);
-                  logEntry("global", currentTime, `${crewMember.name} lost a loot in panic attack !`);
+                  logEntry("global", currentTime, `${crewMember.name} lost a loot while in panic attack...`);
                 }
               }
             } else {
@@ -312,7 +361,9 @@ function startGameLoop() {
           if (lethalEventRoll < dangerMeter) {
             // ROLL VS DIFICULTY IN RANDOM LETHAL EVENT IN LIST
             // roll for scan, create entry in Encyclopedia
-            //logEntry("lethal", currentTime, "LETHAL EVENT PROC !")
+
+            let result = procMobEvent(selectedCrewMember);
+            logEntry(result.type, currentTime, result.message)
           }
         }
 

@@ -4,6 +4,7 @@ export const store_crew = [
     {
         id: 1,
         name: 'Flashlight',
+        bonus: 1,
         price: 15,
         info: 'A simple flashlight, useful to see in the dark.',
         type: 'tool'
@@ -11,6 +12,7 @@ export const store_crew = [
     {
         id: 2,
         name: 'Talkie',
+        bonus: 2,
         price: 20,
         info: 'A simple talkie, useful to communicate with other crew members. Boost productivity.',
         type: 'tool'
@@ -25,6 +27,7 @@ export const store_crew = [
     {
         id: 4,
         name: 'Medkit',
+        bonus: 50,
         price: 75,
         info: 'Heal 50hp after an encounter with an ennemy, but you can only use it once per day',
         type: 'tool'
