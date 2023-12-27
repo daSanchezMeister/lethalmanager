@@ -1,4 +1,4 @@
-import { getRandomInt } from "./helpers.js";
+import { getRandomInt, sanity } from "./helpers.js";
 
 export const randomExtEvents = [
     {
@@ -19,7 +19,7 @@ export const randomExtEvents = [
         id: 3,
         type: "global",
         name: "Tell a joke",
-        sanityBoost: 50,
+        sanityBoost: 30,
         desc: "tell a ridiculously funny joke about a long forgotten company worker that get hit by a big ass asteroid during service. What are the odds ? Right guys ?",
     },
     {
@@ -76,7 +76,8 @@ export const procRandomEvent = (crewMember) => {
 
     if (randomEvent.sanityDamage) {
         eventResult.type = randomEvent.type;
-        crewMember.sanity -= randomEvent.sanityDamage;
+        crewMember.sanity -= sanity(crewMember, randomEvent.sanityDamage);
+        // crewMember.sanity -= randomEvent.sanityDamage;
         if (crewMember.sanity <= 0) {
             crewMember.sanity = 0;
             crewMember.skipTurn = 12 / crewMember.productivity;

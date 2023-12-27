@@ -97,8 +97,6 @@ export const procEnvEvent = (crewMember) => {
     }
 
     const hasCounter = crewMember.inventory.some((item) => item.name == randomEnv.counter);
-    // const isPro = crewMember.traits.some((trait) => trait.name === "Pro Gamer");
-    // const diceBonus = isPro ? 2 : 0;
 
     if (randomEnv.counter && hasCounter) {      
         

@@ -48,7 +48,9 @@
     <div class="monitor">
         {#each $game.crew as crewmember (crewmember.id)}
         <!-- <div class="crewmember"> -->
-        <table id="{crewmember.id}" class:dead={!crewmember.isAlive}>
+        <table id="{crewmember.id}" 
+            class:dead={!crewmember.isAlive} 
+            class:missing={crewmember.status === "Missing"}>
             <!-- <span class="over"></span> -->
             <thead>
                 <tr>
@@ -133,6 +135,7 @@
                     <td>Sanity :</td>
                     <!-- {crewmember.sanity} -->
                     <td>
+                        {crewmember.sanity}
                         {#if crewmember.sanity > 75}
                             Feels good
                         {:else if crewmember.sanity > 50 && crewmember.sanity <= 75}
@@ -167,11 +170,6 @@
 </main>
 
 <style>
-    .dead {
-        opacity: .75;
-        color: red;
-    }
-    .dead .heart-rate { display: none; }
     .map {
         position: relative;
         overflow: hidden;
@@ -192,7 +190,7 @@
         transition-property: width;
         transition-duration: 2s;
     }
-    .dead th, .dead .progress { background: #ff00001c; }
+    
     .health { 
         position: relative;
         overflow: hidden;
@@ -308,4 +306,16 @@
         min-width: 200px;
         background: none;
     }
+
+    .dead {
+        opacity: .75;
+        color: red;
+    }
+    .dead .heart-rate { display: none; }
+    .dead th, .dead .progress { background: #ff00001c; }
+
+    .missing { color: #ffffff70; }
+    .missing .heart-rate { display: none; }
+    .missing th { background: #ffffff0f; }
+    .missing .progress { background-color: #ffffff0f; }
 </style>

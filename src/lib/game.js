@@ -5,12 +5,12 @@ import { procLoot } from './loots.js';
 import { procEnvEvent } from './envEvents.js';
 import { procRandomEvent } from './randomEvents.js';
 import { procMobEvent } from './mobEvents.js';
-import { traitsList, procTraitEvent } from './traitEvents.js';
+import { traitsList } from './traitEvents.js';
 
 
 let intervalId;
 const moonLevel = 0;
-export let dunjonDistance = 300;
+export let dunjonDistance = 200;
 
 
 let crewGenerator = () => {
@@ -33,12 +33,28 @@ let crewGenerator = () => {
       getOut: 0,
       inventory: [
         {
-          id: 6,
-          name: 'Titanium_armor',
-          ratio: 2,
-          price: 241,
+          id: 11,
+          name: 'Flamethrower',
+          price: 362,
+          bonus: 1,
           info: '',
-          type: 'armor'
+          type: 'weapon'
+        },
+        {
+            id: 12,
+            name: 'Shotgun',
+            price: 147,
+            bonus: 1,
+            info: '',
+            type: 'weapon'
+        },
+        {
+            id: 13,
+            name: 'Shovel',
+            price: 42,
+            bonus: 1,
+            info: '',
+            type: 'weapon'
         }
       ],
       lootBag: [],
@@ -89,13 +105,13 @@ let crewGenerator = () => {
       getOut: 0,
       inventory: [
         {
-          id: 7,
-          name: 'Sonic_boots',
-          price: 126,
-          bonus: 15,
+          id: 10,
+          name: 'Cuddly_toy',
+          price: 90,
+          bonus: -25,
           info: '',
-          type: 'moovement'
-      }
+          type: 'sanity'
+        },
       ],
       lootBag: [],
       traits : [
@@ -120,7 +136,14 @@ export let game = writable({
       crewGenerator(),
       crewGenerator(),
       crewGenerator(),
-    ]
+    ],
+    missionStart() {
+      this.live = true;
+      this.crew.forEach(crewMember => {
+        crewMember.status = "Exploring moon";
+      })
+      intervalId = startGameLoop();
+    }
 });
 
 export let logs = writable([]);
@@ -130,12 +153,7 @@ export let shipStorage = writable([]);
 //SIMULATE START GAME COMMAND
 setTimeout(() => {
   game.update((game) => {
-    game.live = true;
-    game.crew.forEach(crewMember => {
-      crewMember.status = "Exploring moon";
-    })
-
-    intervalId = startGameLoop();
+    game.missionStart();
     return game;
   });
 }, 2000);
@@ -196,7 +214,7 @@ function startGameLoop() {
   // TIME MANAGEMENT
   // INCREASE DIFICULTY EVERY HOUR
   const handleClock = () => {
-    let clockTick = getRandomInt(6, 10);
+    let clockTick = getRandomInt(6, 11); //[6-10]
 
     // MAKE TIME PAST AND STOP THE GAME IF DAYS END
     game.update((game) => {
@@ -205,7 +223,7 @@ function startGameLoop() {
         game.minute = 0 + overTime;
         game.hour++;
         dangerMeter += 2;
-        console.log('dangerMeter : ' + dangerMeter);
+        // console.log('dangerMeter : ' + dangerMeter);
       } else {
         game.minute += clockTick;
       }
@@ -271,7 +289,7 @@ function startGameLoop() {
               }
             } else {
               crewMember.status = crewMember.lastStatus;
-              crewMember.sanity = 25 * crewMember.productivity;
+              crewMember.sanity = 100;
               logEntry("success", currentTime, `${crewMember.name} survived panic attack and is now back to work !`)
             }
           }
@@ -280,7 +298,7 @@ function startGameLoop() {
               crewMember.skipTurn--;       
             } else {
               crewMember.status = crewMember.lastStatus;
-              crewMember.sanity = 25 * crewMember.productivity;
+              crewMember.sanity = 100;
               logEntry("success", currentTime, `${crewMember.name} find his way and is no longer lost. Back to work !`)
             }
           }
@@ -330,8 +348,7 @@ function startGameLoop() {
         //////////////////////////////////
         // LOOT EVENT
         //////////////////////////////////
-        console.log('randomRoll this tick : ' + randomRoll);
-
+        // console.log('randomRoll this tick : ' + randomRoll);
         if (randomRoll < 0.20 && selectedCrewMember.lootBag.length < 4 && selectedCrewMember.status === "Working") {
           let result = procLoot(selectedCrewMember);
           logEntry(result.type, currentTime, result.message);
@@ -353,16 +370,17 @@ function startGameLoop() {
         //////////////////////////////////
         // TRAITS EVENT
         //////////////////////////////////
-        if (randomRoll > 0.4 && randomRoll < 0.43) {
+        //if (randomRoll > 0.4 && randomRoll < 0.7) {
           //logEntry("trait", currentTime, "TRAIT event proc")
-          let result = procTraitEvent(selectedCrewMember);
-          if (result) { logEntry(result.type, currentTime, result.message); }
-        }
+          //let result = procTraitEvent(selectedCrewMember);
+          //if (result) { logEntry(result.type, currentTime, result.message);
+        //}
+        
         //////////////////////
         // MOB EVENTS !!!!!!!
         // let result = procMobEvent(selectedCrewMember);
         // logEntry(result.type, currentTime, result.message)
-        if(dangerMeter >= 4) {
+        if(dangerMeter >= 6) {
           let lethalEventRoll = dice(100);
           if (lethalEventRoll < dangerMeter) {
             // ROLL VS DIFICULTY IN RANDOM LETHAL EVENT IN LIST

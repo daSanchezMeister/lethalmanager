@@ -2,35 +2,42 @@ import { getRandomInt, dice } from "./helpers.js";
 
 export const loots = [
     {
-        id: 1,
         name: "Small scrap metal",
         difficulty: 5,
         value: 24,
-        desc: "a small piece of scrap metal. It might be useful.",
+        desc: "a small piece of scrap metal. Better than nothing.",
     },
     {
-        id: 2,
-        name: "V-type engine",
-        difficulty: 10,
+        name: "Scrap metal",
+        difficulty: 7,
         value: 31,
+        desc: "a regular piece of scrap metal. It might be useful.",
+    },
+    {
+        name: "V-type engine",
+        difficulty: 8,
+        value: 36,
         desc: "a medium motor engine. Company would love it.",
     },
     {
-        id: 3,
+        name: "Pickle Rick toy",
+        difficulty: 10,
+        value: 54,
+        desc: "a collector pickle rick toy. Still inside box!",
+    },
+    {
         name: "Little statue",
-        difficulty: 15,
-        value: 39,
+        difficulty: 14,
+        value: 61,
         desc: "a strange small but still precious statue. Looks rare.",
     },
     {
-        id: 4,
         name: "Gold bar",
         difficulty: 19,
         value: 82,
         desc: "...Wow! a pure gold bar! This is a jackpot!",
     },
     {
-        id: 5,
         name: "lost_program.exe",
         epic: true,
         difficulty: 20,
@@ -55,7 +62,7 @@ export const procLoot = (crewMember) => {
         if (crewMember.lootBag.length === 4) {
             crewMember.status = "Seek for exit";
             crewMember.getOut = Math.round(16 / crewMember.productivity);
-            eventResult.message = `${crewMember.name} found ${randomLoot.desc} [value: ${randomLoot.value}] ${crewMember.name} is now looking for the exit... !`
+            eventResult.message = `${crewMember.name} found ${randomLoot.desc} [value: ${randomLoot.value}] Lootbag is full, ${crewMember.name} is now looking for the exit !`
         } else {
             eventResult.message = `${crewMember.name} found ${randomLoot.desc} [value: ${randomLoot.value}]`
         }

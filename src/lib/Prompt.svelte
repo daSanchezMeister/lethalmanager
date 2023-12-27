@@ -76,6 +76,9 @@
                 case 'manual':
                     dispatch('changeView', { view: 'manual' });
                 break;
+                case 'bestiary':
+                    dispatch('changeView', { view: 'bestiary' });
+                break;
                 case 'log on':
                     dispatch('log', { status: true });
                 break;

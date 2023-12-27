@@ -37,7 +37,7 @@ main {
 .panel {
   position: absolute;
   top: 160px;
-  right: 50px; left: 50px; bottom: 50px;
+  right: 50px; left: 50px; bottom: 100px;
 }
 
 .title {

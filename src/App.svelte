@@ -1,11 +1,12 @@
 <script>
   import { changeViewSound, errorSound, successSound, playRandomAtmosAudio } from './lib/audio.js';
-  //import { game } from './lib/game.js';
 
   import Intro    from './lib/Intro.svelte';
   import Header   from './lib/Header.svelte';
   import MainMenu from './lib/MainMenu.svelte';
   import Monitor  from './lib/Monitor.svelte';
+  import Manual  from './lib/Manual.svelte';
+  import Bestiary  from './lib/Bestiary.svelte';
   import Store    from './lib/Store.svelte';
   import Logs     from './lib/Logs.svelte';
   import Pause    from './lib/Pause.svelte';
@@ -61,6 +62,8 @@
     {#if view === 'monitor'}<Monitor />{/if}
     
     {#if view === 'store'}<Store />{/if}
+    {#if view === 'manual'}<Manual />{/if}
+    {#if view === 'bestiary'}<Bestiary />{/if}
     
     {#if gameUI}<Prompt 
       on:promptError={UIhandleError}

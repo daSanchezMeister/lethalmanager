@@ -2,7 +2,6 @@ import { writable } from 'svelte/store';
 
 export const store_crew = [
     {
-        id: 1,
         name: 'Flashlight',
         bonus: 1,
         price: 15,
@@ -10,7 +9,6 @@ export const store_crew = [
         type: 'tool'
     },
     {
-        id: 2,
         name: 'Talkie',
         bonus: 2,
         price: 30,
@@ -18,15 +16,13 @@ export const store_crew = [
         type: 'tool'
     },
     {
-        id: 3,
         name: 'Magic_dice',
-        bonus: 6,
+        bonus: 5,
         price: 230,
         info: 'Give the owner a significant luck boost!',
         type: 'tool'
     },
     {
-        id: 4,
         name: 'Plastic_armor',
         ratio: 1.25,
         price: 68,
@@ -34,7 +30,6 @@ export const store_crew = [
         type: 'armor'
     },
     {
-        id: 5,
         name: 'Scap_metal_armor',
         ratio: 1.5,
         price: 122,
@@ -42,7 +37,6 @@ export const store_crew = [
         type: 'armor'
     },
     {
-        id: 6,
         name: 'Titanium_armor',
         ratio: 2,
         price: 241,
@@ -50,7 +44,6 @@ export const store_crew = [
         type: 'armor'
     },
     {
-        id: 7,
         name: 'Sonic_boots',
         price: 126,
         bonus: 15,
@@ -58,27 +51,60 @@ export const store_crew = [
         type: 'moovement'
     },
     {
-        id: 8,
         name: 'Winged_boots',
         price: 83,
         bonus: 10,
         info: '',
         type: 'moovement'
+    },
+    {
+        id: 9,
+        name: 'Family_picture',
+        price: 62,
+        bonus: -15,
+        info: '',
+        type: 'sanity'
+    },
+    {
+        name: 'Cuddly_toy',
+        price: 90,
+        bonus: -25,
+        info: '',
+        type: 'sanity'
+    },
+    {
+        name: 'Flamethrower',
+        price: 362,
+        bonus: 1,
+        info: '',
+        type: 'weapon'
+    },
+    {
+        name: 'Shotgun',
+        price: 147,
+        bonus: 1,
+        info: '',
+        type: 'weapon'
+    },
+    {
+        name: 'Shovel',
+        price: 42,
+        bonus: 1,
+        info: '',
+        type: 'weapon'
     }
 ];
 export const store_ship = [
     {
-        id: 1,
         name: 'Teleporter',
         price: 282,
-        info: 'A simple teleporter, useful to teleport from one place to another.',
+        info: 'A simple teleporter, useful to teleport a crew member directly to the mothership.',
         type: 'tool'
     },
     {
-        id: 2,
         name: 'Inverse_Teleporter',
         price: 361,
-        info: 'A simple inverse teleporter, teleport your crew member directly in hell',
+        info: 'A simple inverse teleporter, teleport a crew member directly in hell',
         type: 'tool'
     }
 ];

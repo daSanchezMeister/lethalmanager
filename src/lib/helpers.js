@@ -10,10 +10,6 @@ export let dice = (max, crewMember = null) => {
         itemBonuses = crewMember.inventory.filter((item) => item.type === "tool").map((item) => item.bonus).reduce((acc, value) => acc + value, 0);
         traitBonuses = crewMember.traits.reduce((acc, trait) => acc + trait.diceBonus, 0)
 
-        // console.log(crewMember.name);
-        // console.log('itemBonuses : ' + itemBonuses);
-        // console.log('traitBonuses : ' + traitBonuses);
-
     } else {
         itemBonuses = 0;
         traitBonuses = 0;
@@ -29,12 +25,22 @@ export const moovement = (crewMember) => {
 
     itemBonuses = crewMember.inventory.filter((item) => item.type === "moovement").map((item) => item.bonus).reduce((acc, value) => acc + value, 0);
     traitBonuses = crewMember.traits.reduce((acc, trait) => acc + trait.moovementBonus, 0)
-    
-    console.log(crewMember.name);
-    console.log('itemBonuses : ' + itemBonuses);
-    console.log('traitBonuses : ' + traitBonuses);
 
     const result = getRandomInt(8,12) + crewMember.productivity + itemBonuses + traitBonuses;
+    return result;
+}
+
+export const sanity = (crewMember, sanityDamage) => {
+
+    let itemBonuses = crewMember.inventory.filter((item) => item.type === "sanity").map((item) => item.bonus).reduce((acc, value) => acc + value, 0);
+    let traitBonuses = crewMember.traits.reduce((acc, trait) => acc + trait.sanityBonus, 0)
+
+    let result;
+    let calc = sanityDamage + itemBonuses + traitBonuses;
+
+    if (calc < 0) { result = 0; } 
+    else { result = calc; }
+
     return result;
 }
 
