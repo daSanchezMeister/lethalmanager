@@ -1,9 +1,6 @@
 <script>
     import { bestiary } from './mobEvents.js';
 
-    bestiary.forEach((mob) => {
-        console.log(mob);
-    });
 </script>
 
 <div class="title">
@@ -43,12 +40,14 @@
 </div>
 
 <section class="panel change_view_glitch">
-    {#each bestiary as mob }
-        <div>
-            <h2>{mob.name}</h2>
-            <p>{mob.scanned}</p>
-        </div>
-    {/each}
+    <h1>Bestiary</h1>
+    <ul class="menu">
+        {#each bestiary as mob }
+        <li>
+            > {#if (mob.scanned)} {mob.name} {:else} ????????? {/if}
+        </li>
+        {/each}
+    </ul>
 </section>
 
 <style>

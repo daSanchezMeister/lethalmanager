@@ -38,6 +38,7 @@ main {
   position: absolute;
   top: 160px;
   right: 50px; left: 50px; bottom: 100px;
+  overflow: auto;
 }
 
 .title {
@@ -52,4 +53,19 @@ main {
 }
 .title.glitch {
   z-index: -1;
+}
+
+ul.menu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul.menu li {
+  font-size: 24px;
+  margin-top: 24px;
+}
+
+ul.menu span {
+  display: block;
+  font-size: 16px;
 }

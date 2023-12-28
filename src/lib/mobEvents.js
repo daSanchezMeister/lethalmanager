@@ -9,6 +9,7 @@ const mobExtEvents = [
         win: "just avoided an alien bee hive.",
         lost: "stepped on an alien bee hive and get hunted by some alien bees, it hurts.",
         dead: "stepped on an alien bee hive and get hunted to death by a swarm of alien bees. RIP",
+        scanned: false,
     },
     {
         name: "Giant Alien",
@@ -16,7 +17,8 @@ const mobExtEvents = [
         damage: 100,
         win: "manage to sneak around a big ass giant alien, better stay sneaky.",
         lost: "got catched by the Giant but somehow manage to escape it, not without behing hurt bad.",
-        dead: "got catched and eated alive by a biggg giant alien..."
+        dead: "got catched and eated alive by a biggg giant alien...",
+        scanned: false,
     },
     {
         name: "Dune worm",
@@ -24,6 +26,7 @@ const mobExtEvents = [
         damage: 300,
         win: "WTF I ALMOST GOT EATED BY A DUNE WORM????",
         dead: "just dispeared in a loud jurassic park sound... Is that a Dune worm in the sky ? huh ?",
+        scanned: false,
     }
 ];
 
@@ -35,6 +38,7 @@ const mobDunjonEvents = [
         win: "jumped over a Slime, thank god its so slow.",
         lost: "stepped in a large Slime but managed to get out of it.",
         dead: "face planted in a big Slime... made weird bubbling sounds, and died...",
+        scanned: false,
     },
     {
         name: "Small alien roach",
@@ -44,6 +48,7 @@ const mobDunjonEvents = [
         lost: "got bitten by an alien roach, it hurts a lot.",
         dead: "got eated by an alien roach... RIP.",
         counter: "Shovel",
+        scanned: false,
     },
     {
         name: "Alien roach",
@@ -53,6 +58,7 @@ const mobDunjonEvents = [
         lost: "got bitten by an alien roach, it hurts a lot.",
         dead: "got eated by an alien roach... RIP.",
         counter: "Shotgun",
+        scanned: false,
     },
     {
         name: "Face Hugger",
@@ -62,15 +68,17 @@ const mobDunjonEvents = [
         lost: "got choked by a Face Hugger but somehow manage to get him off and throw it over the fence.",
         dead: "run like hell to flee off a Face Hugger, but it was too fast... RIP.",
         counter: "Flamethrower",
+        scanned: false,
     },
     {
         name: "Xenomorph",
         difficulty: 15,
         damage: 100,
         win: "somehow manage to avoid a big adult Xenomorph. Damn, that was close.",
-        lost: "Get hit by the tail of a Xenomorph. Somehow manage to survive but it hurts a lot.",
+        lost: "Get hit by the tail of a Xenomorph. Somehow manage to survive but it was close!",
         dead: "head roll over the floor... Next moment an adult Xenomorph sneak up through the ventilation...",
         counter: "Flamethrower",
+        scanned: false,
     },
     {
         name: "Weird snake",
@@ -80,6 +88,7 @@ const mobDunjonEvents = [
         lost: "stepped on an small alien snake and got bitten, it hurts.",
         dead: "got bitten by some strange lurking snake, venom was too strong and instantly lead to death.",
         counter: "Shovel",
+        scanned: false,
     },
 ]
 
@@ -101,6 +110,11 @@ export const procMobEvent = (crewMember) => {
         eventResult.type = "lethal";
         eventResult.message = `${crewMember.name} attack ${randomMob.name} with ${randomMob.counter} !`;
         // return eventResult;
+
+        if (dice(20, crewMember) > 5 && !randomMob.scanned) {
+            randomMob.scanned = true;
+            eventResult.message += ` Monster scanned by ${crewMember.name}, check bestiary for further information.`;
+        }
 
     } else if(dice(20, crewMember) < randomMob.difficulty) {
         // fail
@@ -124,6 +138,11 @@ export const procMobEvent = (crewMember) => {
         // success
         eventResult.type = "danger";
         eventResult.message = `${crewMember.name} ${randomMob.win}`;
+
+        if (dice(20, crewMember) > 5 && !randomMob.scanned) {
+            randomMob.scanned = true;
+            eventResult.message += ` Monster scanned by ${crewMember.name}, check bestiary for further information.`;
+        }
         
     }
 
@@ -131,41 +150,4 @@ export const procMobEvent = (crewMember) => {
 }
 
 
-export let bestiary = [
-    {
-        name: "Alien bees",
-        scanned: false,
-    },
-    {
-        name: "Giant Alien",
-        scanned: false,
-    },
-    {
-        name: "Dune worm",
-        scanned: false,
-    },
-    {
-        name: "Slime",
-        scanned: false,
-    },
-    {
-        name: "Small alien roach",
-        scanned: false,
-    },
-    {
-        name: "Alien roach",
-        scanned: false,
-    },
-    {
-        name: "Face Hugger",
-        scanned: false,
-    },
-    {
-        name: "Xenomorph",
-        scanned: false,
-    },
-    {
-        name: "Weird snake",
-        scanned: false,
-    },
-]
+export let bestiary = [...mobExtEvents, ...mobDunjonEvents];

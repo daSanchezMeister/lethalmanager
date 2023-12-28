@@ -3,17 +3,18 @@ export const commandList = [
     'menu',
     'monitor',
     'manual',
+    'bestiary',
 
     'buy flashlight', 'equip flashlight',
     'buy talkie', 'equip talkie',
-    'buy magic-dice', 'equip magic-dice',
+    'buy magic_dice', 'equip magic_dice',
 
-    'buy plastic-armor', 'equip plastic-armor',
-    'buy scrap-metal-armor', 'equip scrap-metal-armor',
-    'buy titanium-armor', 'equip titanium-armor',
+    'buy plastic_armor', 'equip plastic_armor',
+    'buy scrap_metal_armor', 'equip scrap_metal_armor',
+    'buy titanium_armor', 'equip titanium_armor',
 
-    'buy winged-boots', 'equip winged-boots',
-    'buy sonic-boots', 'equip sonic-boots',
+    'buy winged_boots', 'equip winged_boots',
+    'buy sonic_boots', 'equip sonic_boots',
 
     'buy teleporter', 'equip teleporter',
     'buy inverse_teleporter', 'equip inverse_teleporter',

@@ -65,18 +65,5 @@
 
 
 <style>
-    ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-    li {
-        font-size: 24px;
-        margin-top: 24px;
-    }
 
-    span {
-        display: block;
-        font-size: 16px;
-    }
 </style>

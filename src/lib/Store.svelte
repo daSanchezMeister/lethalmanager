@@ -53,7 +53,7 @@
                 </ul>
             </h1>
             <ul id="crew_stuff">
-                {#each store_crew as item (item.id)}
+                {#each store_crew as item}
                     <li>{item.name} [{item.price}]</li>
                 {/each}
             </ul>
@@ -65,7 +65,7 @@
                 </ul>
             </h1>
             <ul id="ship_stuff">
-                {#each store_ship as item (item.id)}
+                {#each store_ship as item}
                     <li>{item.name} [{item.price}]</li>
                 {/each}
             </ul>
